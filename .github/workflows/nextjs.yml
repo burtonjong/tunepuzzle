@@ -8,12 +8,13 @@ on:
     branches:
       - main
 
-build:
-  runs-on: ubuntu-latest
-      strategy:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
       matrix:
         node-version: [20]
-        
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
