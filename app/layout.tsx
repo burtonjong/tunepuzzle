@@ -1,19 +1,21 @@
 import "../global.css";
+import Provider from "@/contexts/Provider";
+import { UserContextProvider } from "@/contexts/UserContext";
 import { Inter } from "@next/font/google";
 import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    default: "spotiguesser",
-    template: "%s | spotiguesser",
+    default: "tunepuzzle",
+    template: "%s | tunepuzzle",
   },
   description: "guessing songs based on audio",
   openGraph: {
-    title: "spotiguesser",
+    title: "tunepuzzle",
     description: "guessing songs based on audio",
-    url: "spotiguesser-three.vercel.app",
-    siteName: "spotiguesser",
+    url: "tunepuzzle.vercel.app",
+    siteName: "tunepuzzle",
     images: [
       {
         url: "https://media.wired.com/photos/64125850412651fa6ee1479c/master/pass/AI-Powered-Future-of-Sound-Culture-1439768811.jpg",
@@ -61,7 +63,7 @@ export default function RootLayout({
           process.env.NODE_ENV === "development" ? "debug-screens" : undefined
         }`}
       >
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
