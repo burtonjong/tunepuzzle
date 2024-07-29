@@ -2,7 +2,7 @@ import { config } from "dotenv";
 
 config();
 
-export const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID as string;
+export const CLIENT_ID = process.env.AUTH_SPOTIFY_ID as string;
 
 import type { NextApiRequest, NextApiResponse } from "next";
 

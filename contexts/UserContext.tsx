@@ -11,7 +11,7 @@ import {
   fetchProfile,
 } from "@/util/loginFlow";
 
-import { CLIENT_ID } from "@/pages/api/secret";
+import { CLIENT_ID } from "@/util/secret";
 
 interface Props {
   children: ReactNode | ReactNode[];
