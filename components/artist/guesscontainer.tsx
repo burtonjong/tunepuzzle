@@ -1,6 +1,7 @@
 "use client";
 
 import SignOut from "@/components/home/SignOut";
+import Options from "@/components/artist/options";
 
 import Audio from "@/components/artist/audio";
 import { useParams } from "next/navigation";
@@ -55,6 +56,7 @@ export default function GuessContainer({ token }: { token: string }) {
               name: string;
               external_urls: { spotify: string };
               preview_url: string;
+              id: string;
             }[];
           };
         }) => ({
@@ -65,6 +67,7 @@ export default function GuessContainer({ token }: { token: string }) {
             name: track.name,
             external_urls: track.external_urls,
             preview_url: track.preview_url,
+            id: track.id,
           })),
         })
       );
@@ -90,21 +93,13 @@ export default function GuessContainer({ token }: { token: string }) {
           <div className="flex flex-row justify-between w-full">
             <div className="max-w-2xl mx-auto lg:mx-0 ">
               {/* <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl"></h2> */}
-              <Image
-                src={data?.[3].images[1].url ?? ""}
-                alt="album cover"
-                width={250}
-                height={250}
-              />
               <Audio data={data} />
             </div>
             <SignOut />
           </div>
           <div className="w-full h-px bg-zinc-800" />
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-              Options
-            </h2>
+            <Options data={data} />
           </div>
           <div className="hidden w-full h-px md:block bg-zinc-800" />
         </>
