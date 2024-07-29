@@ -101,7 +101,24 @@ module.exports = {
     },
   },
   plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        "::-webkit-scrollbar": {
+          width: "3px",
+          height: "4px",
+        },
+        "::-webkit-scrollbar-thumb": {
+          backgroundColor: "#F4F4F5",
+        },
+        "::-webkit-scrollbar-track": {
+          backgroundColor: "black",
+        },
+      };
+
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
     require("@tailwindcss/typography"),
     require("tailwindcss-debug-screens"),
+    require("tailwind-scrollbar"),
   ],
 };

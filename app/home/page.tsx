@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
 import { auth } from "@/auth";
 
-import { signOut } from "next-auth/react";
+import SignOut from "@/components/home/SignOut";
 
 import ArtistsContainer from "@/components/home/artistscontainer";
 
@@ -23,25 +21,23 @@ export default async function HomePage() {
                     Hi, {session.user?.name}
                   </h2>
                   <p className="mt-4 text-zinc-400">
-                    Your followed Spotify artists will show up here.
+                    Your followed Spotify artists will show up here. Click the
+                    artists images to play.
                   </p>
                 </div>
-                <button
-                  onClick={() => signOut()}
-                  className="duration-200 text-zinc-300 hover:text-zinc-100"
-                >
-                  Sign out
-                </button>
+                <SignOut />
               </div>
               <div className="w-full h-px bg-zinc-800" />
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <ArtistsContainer token={session?.accessToken ?? ""} />
+              </div>
 
-              <ArtistsContainer session={session} />
               <div className="hidden w-full h-px md:block bg-zinc-800" />
             </div>
           </div>
         </div>
       ) : (
-        <h1>Didnt work</h1>
+        <h1>An error occured</h1>
       )}
     </>
   );

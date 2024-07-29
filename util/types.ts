@@ -1,19 +1,19 @@
-interface UserProfile {
-  country: string;
-  display_name: string;
-  email: string;
-  explicit_content: {
-    filter_enabled: boolean;
-    filter_locked: boolean;
-  };
-  external_urls: { spotify: string };
-  followers: { href: string; total: number };
-  href: string;
-  id: string;
-  images: Image[];
-  product: string;
+interface Artist {
   type: string;
   uri: string;
+  name: string;
+  href: string;
+  id: string;
+  popularity: number;
+  external_urls: {
+    spotify: string;
+  };
+  images: Image[];
+  followers: {
+    href: string | null;
+    total: number;
+  };
+  genres: string[];
 }
 
 interface Image {

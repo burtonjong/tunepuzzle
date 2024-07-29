@@ -1,38 +1,91 @@
-import { Session } from "next-auth";
+"use client";
+
 import React from "react";
 
+import { CardNE } from "@/components/cardne";
 import { Card } from "@/components/card";
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
-export default function ArtistsContainer({ session }: { session: Session }) {
+export default function ArtistsContainer({ token }: { token: string }) {
+  const { isFetching, data } = useQuery({
+    queryKey: ["artists"],
+    queryFn: async () => {
+      const response = await fetch(
+        "https://api.spotify.com/v1/me/following?type=artist",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch artists");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
+    },
+  });
+
   return (
     <>
-      {session ? (
-        <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
-          <Card>
-            <Link href={`/home`}>
+      {" "}
+      {isFetching ? (
+        <div className="gap-8 mx-auto">
+          <div className="w-full h-full">
+            <Card>
               <article className="relative w-full h-full p-4 md:p-8">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs text-zinc-100">
-                    <p>date</p>
-                  </div>
-                </div>
-
                 <h2
                   id="featured-post"
                   className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
                 >
-                  title
+                  Loading...
                 </h2>
-                <p className="mt-4 leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300">
-                  desc
-                </p>
               </article>
-            </Link>
-          </Card>
+            </Card>
+          </div>
         </div>
       ) : (
-        <h1>Didnt work</h1>
+        data.artists.items.map((artist: Artist) => (
+          <CardNE key={artist.id}>
+            <article className="relative w-full h-full p-4 md:p-8 min-w-64 flex flex-col items-center sm:items-start">
+              <Image
+                src="/spotify/logos/spotifywhitelogo.png"
+                width={100}
+                height={100}
+                alt="spotify logo white"
+                className="pb-2"
+              />
+              <Image
+                src={artist.images[1].url}
+                width={artist.images[1].width}
+                height={artist.images[1].height}
+                alt="artist image"
+                className="mx-auto"
+              />
+              <h2
+                id="featured-post"
+                className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
+              >
+                {artist.name}
+              </h2>
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-xs text-zinc-100">
+                  <a
+                    target="_blank"
+                    href={artist.external_urls.spotify}
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    Go to spotify profile
+                  </a>
+                </div>
+              </div>
+            </article>
+          </CardNE>
+        ))
       )}
     </>
   );
