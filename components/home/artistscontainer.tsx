@@ -6,8 +6,11 @@ import { CardNE } from "@/components/cardne";
 import { Card } from "@/components/card";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function ArtistsContainer({ token }: { token: string }) {
+  const router = useRouter();
+
   const { isFetching, data } = useQuery({
     queryKey: ["artists"],
     queryFn: async () => {
@@ -28,6 +31,10 @@ export default function ArtistsContainer({ token }: { token: string }) {
       return data;
     },
   });
+
+  const handleArtistClick = (id: string) => {
+    router.push(`/artist/${id}`);
+  };
 
   return (
     <>
@@ -58,13 +65,19 @@ export default function ArtistsContainer({ token }: { token: string }) {
                 alt="spotify logo white"
                 className="pb-2"
               />
-              <Image
-                src={artist.images[1].url}
-                width={artist.images[1].width}
-                height={artist.images[1].height}
-                alt="artist image"
-                className="mx-auto"
-              />
+              <div
+                onClick={() => handleArtistClick(artist.id)}
+                className="cursor-pointer"
+              >
+                <Image
+                  src={artist.images[1].url}
+                  width={artist.images[1].width}
+                  height={artist.images[1].height}
+                  alt="artist image"
+                  className="mx-auto"
+                />
+              </div>
+
               <h2
                 id="featured-post"
                 className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
