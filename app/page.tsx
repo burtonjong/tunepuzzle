@@ -44,7 +44,7 @@ export default function Home() {
               <form
                 action={async () => {
                   "use server";
-                  await signIn("spotify");
+                  await signIn("spotify", { redirectTo: "/home" });
                 }}
               >
                 <button
