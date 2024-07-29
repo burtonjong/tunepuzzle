@@ -42,13 +42,13 @@ export default function Home() {
               </Link>
             ) : (
               <form
+                key={item.action}
                 action={async () => {
                   "use server";
                   await signIn("spotify", { redirectTo: "/home" });
                 }}
               >
                 <button
-                  key={item.action}
                   type="submit"
                   className="text-sm duration-500 text-zinc-500 hover:text-zinc-300"
                 >
