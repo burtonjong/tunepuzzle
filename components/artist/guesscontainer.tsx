@@ -2,7 +2,8 @@
 
 import Options from "@/components/artist/options";
 import Score from "@/components/artist/score";
-import Audio from "@/components/artist/audio";
+import Particles from "@/components/particles";
+import Visualizer from "@/components/artist/visualizer/visualizer";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -143,16 +144,19 @@ export default function GuessContainer({ token }: { token: string }) {
         </div>
       ) : (
         <>
-          <div className="flex flex-row justify-between w-full">
-            <div className="w-full mx-auto lg:mx-0 flex flex-row items-center gap-4 space-between">
-              <Audio song={gameState.audio ?? ({} as Song)} />
-              <div className="w-1/2 h-full">
-                <Score
-                  start={start}
-                  score={gameState.game?.getScore() ?? 0}
-                  currentRound={gameState.currentRound?.roundNumber}
-                />
-              </div>
+          <div className="absolute h-1/2 w-screen left-0 -top-12">
+            {gameState.currentRound?.roundNumber && (
+              <Visualizer url={gameState.audio?.preview_url ?? ""} />
+            )}
+          </div>
+
+          <div className="flex flex-row w-full" style={{ marginTop: "1rem" }}>
+            <div className="w-1/8 h-full">
+              <Score
+                start={start}
+                score={gameState.game?.getScore() ?? 0}
+                currentRound={gameState.currentRound?.roundNumber}
+              />
             </div>
           </div>
           <div className="w-full h-px bg-zinc-800" />
