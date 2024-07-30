@@ -31,10 +31,12 @@ export default async function HomePage() {
                 </div>
                 <SignOut />
               </div>
-              <div className="w-full h-px bg-zinc-800" />
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <ArtistsContainer token={session?.accessToken ?? ""} />
-              </div>
+              <div
+                className="w-full h-px bg-zinc-800"
+                style={{ marginTop: "0.5rem" }}
+              />
+
+              <ArtistsContainer token={session?.accessToken ?? ""} />
 
               <div className="hidden w-full h-px md:block bg-zinc-800" />
             </div>

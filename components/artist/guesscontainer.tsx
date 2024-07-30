@@ -171,43 +171,43 @@ export default function GuessContainer({ token }: { token: string }) {
               style={{ marginTop: "1rem" }}
             >
               <div className="w-1/8 h-full">
-                <Card>
-                  <article className="relative w-full h-full p-4 md:p-8">
-                    <button
-                      onClick={() => start()}
-                      className="text-zinc-100 hover:text-white"
-                    >
+                <button
+                  onClick={() => start()}
+                  className="text-zinc-100 hover:text-white"
+                >
+                  <Card>
+                    <article className="relative w-full h-full p-4 md:p-8">
                       Start Game
-                    </button>
-                  </article>
-                </Card>
+                    </article>
+                  </Card>
+                </button>
               </div>
             </div>
           )}
 
           <div className=" flex justify-center w-full flex-col items-center gap-4">
             <div className="w-full h-px bg-zinc-800" />
-            <div className="">
-              <input
-                className="z-10"
-                type="range"
-                name="volume"
-                value={gameState.volume}
-                min="0"
-                max="1"
-                step="0.01"
-                onChange={handleSlider}
-              />
-            </div>
 
             {gameState.game ? (
               gameState.options && gameState.options.length > 0 ? (
-                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-                  <Options
-                    songs={gameState.options ?? []}
-                    handleAnswer={handleAnswer}
+                <>
+                  <input
+                    className="z-10"
+                    type="range"
+                    name="volume"
+                    value={gameState.volume}
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    onChange={handleSlider}
                   />
-                </div>
+                  <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                    <Options
+                      songs={gameState.options ?? []}
+                      handleAnswer={handleAnswer}
+                    />
+                  </div>
+                </>
               ) : (
                 <ScoreCard
                   score={gameState.game?.getScore() ?? 0}

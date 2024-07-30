@@ -3,10 +3,10 @@
 import React from "react";
 
 import { CardNE } from "@/components/cardne";
-import { Card } from "@/components/card";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ArtistStats from "@/components/home/artiststats";
 
 import type { Artist } from "@/util/types";
 
@@ -14,6 +14,7 @@ export default function ArtistsContainer({ token }: { token: string }) {
   const router = useRouter();
 
   const { isFetching, data } = useQuery({
+    initialData: {} as Artist[],
     queryKey: ["artists"],
     queryFn: async () => {
       const response = await fetch(
@@ -40,7 +41,7 @@ export default function ArtistsContainer({ token }: { token: string }) {
 
   return (
     <>
-      {" "}
+      <ArtistStats numArtists={data?.artists?.items.length} />{" "}
       {isFetching ? (
         <div className="gap-8 mx-auto">
           <div className="w-full h-full">
@@ -55,50 +56,59 @@ export default function ArtistsContainer({ token }: { token: string }) {
           </div>
         </div>
       ) : (
-        data.artists.items.map((artist: Artist) => (
-          <CardNE key={artist.id}>
-            <article className="relative w-full h-full p-4 md:p-8 min-w-64 flex flex-col items-center sm:items-start">
-              <Image
-                src="/spotify/logos/spotifywhitelogo.png"
-                width={100}
-                height={100}
-                alt="spotify logo white"
-                className="pb-2"
-              />
-              <div
-                onClick={() => handleArtistClick(artist.id)}
-                className="cursor-pointer"
-              >
-                <Image
-                  src={artist.images[1].url}
-                  width={artist.images[1].width}
-                  height={artist.images[1].height}
-                  alt="artist image"
-                  className="mx-auto"
-                />
-              </div>
+        <>
+          <div className="w-full h-px bg-zinc-800" />
+          <div
+            className="animate-fade-up w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 "
+            style={{ marginTop: "1rem" }}
+          >
+            {data.artists.items.map((artist: Artist) => (
+              <CardNE key={artist.id}>
+                <div
+                  onClick={() => handleArtistClick(artist.id)}
+                  className="cursor-pointer"
+                >
+                  <article className="relative w-full h-full p-4 md:p-8 min-w-64 flex flex-col items-center sm:items-start">
+                    <Image
+                      src="/spotify/logos/spotifywhitelogo.png"
+                      width={100}
+                      height={100}
+                      alt="spotify logo white"
+                      className="pb-2"
+                    />
 
-              <h2
-                id="featured-post"
-                className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
-              >
-                {artist.name}
-              </h2>
-              <div className="flex items-center justify-between gap-2">
-                <div className="text-xs text-zinc-100">
-                  <a
-                    target="_blank"
-                    href={artist.external_urls.spotify}
-                    rel="noopener noreferrer"
-                    className="underline"
-                  >
-                    Go to spotify profile
-                  </a>
+                    <Image
+                      src={artist.images[1].url}
+                      width={artist.images[1].width}
+                      height={artist.images[1].height}
+                      alt="artist image"
+                      className="mx-auto"
+                    />
+
+                    <h2
+                      id="artst-name"
+                      className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
+                    >
+                      {artist.name}
+                    </h2>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs text-zinc-100">
+                        <a
+                          target="_blank"
+                          href={artist.external_urls.spotify}
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          Go to spotify profile
+                        </a>
+                      </div>
+                    </div>
+                  </article>{" "}
                 </div>
-              </div>
-            </article>
-          </CardNE>
-        ))
+              </CardNE>
+            ))}
+          </div>
+        </>
       )}
     </>
   );
