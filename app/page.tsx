@@ -9,24 +9,6 @@ const navigation = [
 ];
 
 export default function Home() {
-  // for fetching client secret from the api route
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("/api/secret");
-  //       if (!response.ok) {
-  //         throw new Error(`Error: ${response.status}`);
-  //       }
-  //       const result = await response.json();
-  //       console.log(result);
-  //     } catch (err: any) {
-  //       console.error(err.message);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
       <nav className="my-16 animate-fade-in">
@@ -70,16 +52,34 @@ export default function Home() {
 
       <div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
       <div className="my-16 text-center animate-fade-in">
-        <h2 className="text-sm text-zinc-500 ">
+        <h2 className="text-md text-zinc-400 pb-1">
           An app built with{" "}
           <Link
             target="_blank"
-            href="https://unkey.dev"
+            href="https://open.spotify.com/"
             className="underline duration-500 hover:text-zinc-300"
           >
             Spotify
           </Link>{" "}
           to guess songs.
+        </h2>
+        <h2 className="text-sm text-zinc-500 ">
+          Special thanks to{" "}
+          <Link
+            target="_blank"
+            href="https://github.com/chronark/chronark.com"
+            className="underline duration-500 hover:text-zinc-300"
+          >
+            chronark
+          </Link>{" "}
+          and{" "}
+          <Link
+            target="_blank"
+            href="https://github.com/drcmda"
+            className="underline duration-500 hover:text-zinc-300"
+          >
+            drcmda.
+          </Link>{" "}
         </h2>
       </div>
     </div>

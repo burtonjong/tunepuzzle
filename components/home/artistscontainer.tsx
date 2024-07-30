@@ -44,16 +44,14 @@ export default function ArtistsContainer({ token }: { token: string }) {
       {isFetching ? (
         <div className="gap-8 mx-auto">
           <div className="w-full h-full">
-            <Card>
-              <article className="relative w-full h-full p-4 md:p-8">
-                <h2
-                  id="featured-post"
-                  className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
-                >
-                  Loading...
-                </h2>
-              </article>
-            </Card>
+            <article className="relative w-full h-full p-4 md:p-8">
+              <h2
+                id="featured-post"
+                className="mt-4 text-3xl font-bold text-zinc-100 group-hover:text-white sm:text-4xl font-display"
+              >
+                Loading...
+              </h2>
+            </article>
           </div>
         </div>
       ) : (
