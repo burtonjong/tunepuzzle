@@ -21,7 +21,7 @@ export default function GuessContainer({ token }: { token: string }) {
     queryKey: ["artist", params.id],
     queryFn: async () => {
       const albumsResponse = await fetch(
-        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=single&market=US`,
+        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=single,album&market=US`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,58 +76,32 @@ export default function GuessContainer({ token }: { token: string }) {
     },
   });
 
-  // console.log(songs);
-
-  const [game, setGame] = useState<Game | null>(null);
-  const [currentRound, setCurrentRound] = useState<any>(null);
-  const [audio, setAudio] = useState<Song>({
-    images: [
-      {
-        url: "https://i.scdn.co/image/ab67616d0000b273f6f61ab6fd1d9d101bce44de",
-        height: 640,
-        width: 640,
-      },
-      {
-        url: "https://i.scdn.co/image/ab67616d00001e02f6f61ab6fd1d9d101bce44de",
-        height: 300,
-        width: 300,
-      },
-      {
-        url: "https://i.scdn.co/image/ab67616d00004851f6f61ab6fd1d9d101bce44de",
-        height: 64,
-        width: 64,
-      },
-    ],
-    name: "one way ticket to hell",
-    external_urls: {
-      spotify: "https://open.spotify.com/track/4xrxaGTgv4gMTWbQWFGnIx",
-    },
-    preview_url:
-      "https://p.scdn.co/mp3-preview/b5b45f03c84023cea613862d3ee08b0499e06f91?cid=3d81a57a96cf40a0998cfac20a842d44",
-    id: "4xrxaGTgv4gMTWbQWFGnIx",
+  const [gameState, setGameState] = useState({
+    game: null as Game | null,
+    currentRound: null as any,
+    audio: undefined as Song | undefined,
+    options: [] as Song[],
   });
 
   const start = () => {
-    const newGame = new Game(songs, 5);
-    setGame(newGame);
-    console.log("Game created");
+    if (isSuccess) {
+      const game = new Game(songs, 5);
+      setGameState((prevState) => ({ ...prevState, game }));
+    }
   };
 
   useEffect(() => {
     async function startGame() {
-      if (game && !currentRound) {
-        const round = game.startNewRound();
+      if (gameState.game && !gameState.currentRound) {
+        const round = gameState.game.startNewRound();
         if (round) {
-          setCurrentRound(round);
-          // Create and load audio
+          setGameState((prevState) => ({ ...prevState, currentRound: round }));
           const audio = round.currentSong;
-          setAudio(audio);
-          // If you want to start playing immediately:
-          // await audio.play();
+          const options = round.options;
+          setGameState((prevState) => ({ ...prevState, audio, options }));
         } else {
-          // Game over
           console.log(
-            `Game Over! Your final score is ${game.getScore()} out of ${game.getTotalRounds()}`
+            `Game Over! Your final score is ${gameState.game.getScore()} out of ${gameState.game.getTotalRounds()}`
           );
         }
       }
@@ -136,17 +110,21 @@ export default function GuessContainer({ token }: { token: string }) {
     startGame().catch((error) => {
       console.error("Error starting game:", error);
     });
-  }, [game, currentRound]);
+  }, [gameState.game, gameState.currentRound]);
 
   const handleAnswer = (chosenSong: Song) => {
-    if (game && currentRound) {
-      const isCorrect = game.checkAnswer(chosenSong, currentRound.currentSong);
+    console.log(gameState.currentRound);
+    if (gameState.game && gameState.currentRound) {
+      const isCorrect = gameState.game.checkAnswer(
+        chosenSong,
+        gameState.currentRound.currentSong
+      );
       console.log(
         isCorrect
           ? "Correct!"
-          : `Wrong! The correct answer was: ${currentRound.currentSong.name}`
+          : `Wrong! The correct answer was: ${gameState.currentRound.currentSong.name}`
       );
-      setCurrentRound(null);
+      setGameState((prevState) => ({ ...prevState, currentRound: null }));
     }
   };
 
@@ -164,7 +142,7 @@ export default function GuessContainer({ token }: { token: string }) {
         <>
           <div className="flex flex-row justify-between w-full">
             <div className="max-w-2xl mx-auto lg:mx-0 flex flex-row items-center gap-4">
-              <Audio song={audio ?? {}} />
+              <Audio song={gameState.audio ?? ({} as Song)} />
               <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
                 Round X
               </h2>
@@ -178,7 +156,10 @@ export default function GuessContainer({ token }: { token: string }) {
           </div>
           <div className="w-full h-px bg-zinc-800" />
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Options songs={songs ?? []} handleAnswer={handleAnswer} />
+            <Options
+              songs={gameState.options ?? []}
+              handleAnswer={handleAnswer}
+            />
           </div>
           <div className="hidden w-full h-px md:block bg-zinc-800" />
         </>
