@@ -1,23 +1,15 @@
-interface Artist {
-  type: string;
-  uri: string;
+export type Image = {
+  url: string;
+  height: number;
+  width: number;
+};
+
+export type Song = {
   name: string;
-  href: string;
   id: string;
-  popularity: number;
+  preview_url: string;
   external_urls: {
     spotify: string;
   };
   images: Image[];
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  genres: string[];
-}
-
-interface Image {
-  url: string;
-  height: number;
-  width: number;
-}
+};

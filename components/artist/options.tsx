@@ -1,12 +1,20 @@
 // shout kishin and daesang cause i was listening to options when it worked
+"use client";
 
 import Image from "next/image";
 import { CardNE } from "@/components/cardne";
+import { Song } from "@/util/types";
 
-export default function Options({ data }) {
+export default function Options({
+  songs,
+  handleAnswer,
+}: {
+  songs: Song[];
+  handleAnswer: (chosenSong: Song) => void;
+}) {
   return (
     <>
-      {data.map((song) => (
+      {songs.map((song: Song) => (
         <CardNE key={song.id}>
           <article className="relative w-full h-full p-4 md:p-8 min-w-64 flex flex-col items-center sm:items-start">
             <Image
@@ -16,14 +24,15 @@ export default function Options({ data }) {
               alt="spotify logo white"
               className="pb-2"
             />
-
-            <Image
-              src={song.images[1].url}
-              width={song.images[1].width}
-              height={song.images[1].height}
-              alt="artist image"
-              className="mx-auto"
-            />
+            <div onClick={() => handleAnswer(song)} className="cursor-pointer">
+              <Image
+                src={song.images[1].url}
+                width={song.images[1].width}
+                height={song.images[1].height}
+                alt="artist image"
+                className="mx-auto"
+              />
+            </div>
 
             <h2
               id="featured-post"
