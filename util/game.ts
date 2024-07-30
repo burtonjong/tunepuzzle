@@ -17,7 +17,7 @@ export class Game {
 
   startNewRound() {
     if (this.currentRound >= this.totalRounds) {
-      return null; // Game over
+      return null;
     }
 
     this.currentRound++;
@@ -44,7 +44,7 @@ export class Game {
 
   getWrongAnswers(correctSong: Song) {
     let wrongAnswers: Song[] = [];
-    while (wrongAnswers.length < 2) {
+    while (wrongAnswers.length < 3) {
       let randomSong = this.getUnusedRandomSong();
       if (
         randomSong.name !== correctSong.name &&

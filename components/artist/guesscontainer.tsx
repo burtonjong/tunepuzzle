@@ -1,14 +1,15 @@
 "use client";
 
 import Options from "@/components/artist/options";
-import type { Image, Song } from "@/util/types";
+import Score from "@/components/artist/score";
 import Audio from "@/components/artist/audio";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Game } from "@/util/game";
+import type { Image, Song } from "@/util/types";
 
 export default function GuessContainer({ token }: { token: string }) {
   const params = useParams();
@@ -112,21 +113,23 @@ export default function GuessContainer({ token }: { token: string }) {
     });
   }, [gameState.game, gameState.currentRound]);
 
-  const handleAnswer = (chosenSong: Song) => {
-    console.log(gameState.currentRound);
-    if (gameState.game && gameState.currentRound) {
-      const isCorrect = gameState.game.checkAnswer(
-        chosenSong,
-        gameState.currentRound.currentSong
-      );
-      console.log(
-        isCorrect
-          ? "Correct!"
-          : `Wrong! The correct answer was: ${gameState.currentRound.currentSong.name}`
-      );
-      setGameState((prevState) => ({ ...prevState, currentRound: null }));
-    }
-  };
+  const handleAnswer = useCallback(
+    (chosenSong: Song) => {
+      if (gameState.game && gameState.currentRound) {
+        const isCorrect = gameState.game.checkAnswer(
+          chosenSong,
+          gameState.currentRound.currentSong
+        );
+        console.log(
+          isCorrect
+            ? "Correct!"
+            : `Wrong! The correct answer was: ${gameState.currentRound.currentSong.name}`
+        );
+        setGameState((prevState) => ({ ...prevState, currentRound: null }));
+      }
+    },
+    [gameState.game, gameState.currentRound]
+  );
 
   return (
     <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
@@ -141,26 +144,33 @@ export default function GuessContainer({ token }: { token: string }) {
       ) : (
         <>
           <div className="flex flex-row justify-between w-full">
-            <div className="max-w-2xl mx-auto lg:mx-0 flex flex-row items-center gap-4">
+            <div className="w-full mx-auto lg:mx-0 flex flex-row items-center gap-4 space-between">
               <Audio song={gameState.audio ?? ({} as Song)} />
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-                Round X
-              </h2>
-              <button
-                onClick={() => start()}
-                className="text-zinc-100 hover:text-white"
-              >
-                Start Game
-              </button>
+              <div className="w-1/2 h-full">
+                <Score
+                  start={start}
+                  score={gameState.game?.getScore() ?? 0}
+                  currentRound={gameState.currentRound?.roundNumber}
+                />
+              </div>
             </div>
           </div>
           <div className="w-full h-px bg-zinc-800" />
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Options
-              songs={gameState.options ?? []}
-              handleAnswer={handleAnswer}
-            />
+          <div className=" flex justify-center w-full">
+            {gameState.game ? (
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <Options
+                  songs={gameState.options ?? []}
+                  handleAnswer={handleAnswer}
+                />
+              </div>
+            ) : (
+              <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+                Options will appear here.
+              </h2>
+            )}
           </div>
+
           <div className="hidden w-full h-px md:block bg-zinc-800" />
         </>
       )}

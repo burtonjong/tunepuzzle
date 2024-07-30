@@ -19,7 +19,7 @@ export default function Audio({ song }: { song: Song }) {
             className="pb-2"
           />
 
-          {song.images && (
+          {/* {song.images && (
             <Image
               src={song.images[1].url ?? ""}
               width={250}
@@ -27,7 +27,7 @@ export default function Audio({ song }: { song: Song }) {
               alt="album cover"
               className="mx-auto"
             />
-          )}
+          )} */}
 
           <h2
             id="featured-post"
@@ -57,7 +57,7 @@ export default function Audio({ song }: { song: Song }) {
           showJumpControls={false}
           hasDefaultKeyBindings={false}
           customAdditionalControls={[]}
-          layout="stacked-reverse"
+          layout="horizontal"
         />
       </CardNE>
     </>
