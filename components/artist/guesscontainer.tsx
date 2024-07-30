@@ -1,8 +1,8 @@
 "use client";
 
 import Options from "@/components/artist/options";
-import Score from "@/components/artist/score";
-import Particles from "@/components/particles";
+import ScoreCard from "@/components/artist/scorecard";
+import { Card } from "@/components/card";
 import Visualizer from "@/components/artist/visualizer/visualizer";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -83,12 +83,13 @@ export default function GuessContainer({ token }: { token: string }) {
     currentRound: null as any,
     audio: undefined as Song | undefined,
     options: [] as Song[],
+    volume: 0.5,
   });
 
   const start = () => {
     if (isSuccess) {
       const game = new Game(songs, 5);
-      setGameState((prevState) => ({ ...prevState, game }));
+      setGameState((prevState) => ({ ...prevState, game, totalRounds: 5 }));
     }
   };
 
@@ -105,6 +106,10 @@ export default function GuessContainer({ token }: { token: string }) {
           console.log(
             `Game Over! Your final score is ${gameState.game.getScore()} out of ${gameState.game.getTotalRounds()}`
           );
+          setGameState((prevState) => ({
+            ...prevState,
+            options: [],
+          }));
         }
       }
     }
@@ -132,8 +137,15 @@ export default function GuessContainer({ token }: { token: string }) {
     [gameState.game, gameState.currentRound]
   );
 
+  const handleSlider = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGameState((prevState) => ({
+      ...prevState,
+      volume: Number(event.target.value),
+    }));
+  };
+
   return (
-    <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
+    <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-32 lg:pt-72">
       {isFetching ? (
         <div className="flex flex-row justify-between w-full">
           <div className="max-w-2xl mx-auto lg:mx-0 ">
@@ -144,30 +156,65 @@ export default function GuessContainer({ token }: { token: string }) {
         </div>
       ) : (
         <>
-          <div className="absolute h-1/2 w-screen left-0 -top-12">
+          <div className="absolute h-1/4 lg:h-1/2 w-screen left-0 -top-12 z-0">
             {gameState.currentRound?.roundNumber && (
-              <Visualizer url={gameState.audio?.preview_url ?? ""} />
+              <Visualizer
+                url={gameState.audio?.preview_url ?? ""}
+                volume={gameState.volume}
+              />
             )}
           </div>
 
-          <div className="flex flex-row w-full" style={{ marginTop: "1rem" }}>
-            <div className="w-1/8 h-full">
-              <Score
-                start={start}
-                score={gameState.game?.getScore() ?? 0}
-                currentRound={gameState.currentRound?.roundNumber}
+          {!gameState.currentRound?.roundNumber && (
+            <div
+              className="flex w-full justify-center items-end"
+              style={{ marginTop: "1rem" }}
+            >
+              <div className="w-1/8 h-full">
+                <Card>
+                  <article className="relative w-full h-full p-4 md:p-8">
+                    <button
+                      onClick={() => start()}
+                      className="text-zinc-100 hover:text-white"
+                    >
+                      Start Game
+                    </button>
+                  </article>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          <div className=" flex justify-center w-full flex-col items-center gap-4">
+            <div className="w-full h-px bg-zinc-800" />
+            <div className="">
+              <input
+                className="z-10"
+                type="range"
+                name="volume"
+                value={gameState.volume}
+                min="0"
+                max="1"
+                step="0.01"
+                onChange={handleSlider}
               />
             </div>
-          </div>
-          <div className="w-full h-px bg-zinc-800" />
-          <div className=" flex justify-center w-full">
+
             {gameState.game ? (
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <Options
-                  songs={gameState.options ?? []}
-                  handleAnswer={handleAnswer}
+              gameState.options && gameState.options.length > 0 ? (
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                  <Options
+                    songs={gameState.options ?? []}
+                    handleAnswer={handleAnswer}
+                  />
+                </div>
+              ) : (
+                <ScoreCard
+                  score={gameState.game?.getScore() ?? 0}
+                  totalRounds={gameState.game.getTotalRounds() ?? 0}
+                  currentRound={gameState.currentRound?.roundNumber}
                 />
-              </div>
+              )
             ) : (
               <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
                 Options will appear here.
