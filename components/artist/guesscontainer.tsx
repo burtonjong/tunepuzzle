@@ -190,7 +190,7 @@ export default function GuessContainer({ token }: { token: string }) {
 
           {!gameState.game && (
             <div className="flex w-full justify-center items-end">
-              <div className="w-1/8 h-full">
+              <div className="w-1/8 h-full flex justify-center flex-col">
                 <button
                   onClick={() => start()}
                   className="text-zinc-100 hover:text-white"
@@ -200,22 +200,22 @@ export default function GuessContainer({ token }: { token: string }) {
                       Start Game
                     </article>
                   </Card>
-                  <div className="mt-6">
-                    <input
-                      className="z-10 mt-4"
-                      type="range"
-                      name="total-rounds"
-                      value={gameState.totalRounds}
-                      min="2"
-                      max="12"
-                      step="1"
-                      onChange={handleSlider}
-                    />
-                    <p className="mt-4 leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300">
-                      Total Rounds: {gameState.totalRounds}
-                    </p>
-                  </div>
                 </button>
+                <div className="mt-6">
+                  <input
+                    className="z-10 mt-4"
+                    type="range"
+                    name="total-rounds"
+                    value={gameState.totalRounds}
+                    min="2"
+                    max="12"
+                    step="1"
+                    onChange={handleSlider}
+                  />
+                  <p className="mt-4 leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300 text-center">
+                    Total Rounds: {gameState.totalRounds}
+                  </p>
+                </div>
               </div>
             </div>
           )}

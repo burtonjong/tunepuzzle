@@ -1,8 +1,7 @@
 import React from "react";
 import { auth } from "@/auth";
 
-import SignOut from "@/components/home/signout";
-import HomeButton from "@/components/home/homebutton";
+import SignOut from "@/components/home/SignOut";
 import Particles from "@/components/particles";
 
 import ArtistsContainer from "@/components/home/artistscontainer";
@@ -14,10 +13,10 @@ export default async function HomePage() {
   return (
     <>
       {session ? (
-        <div className="relative min-h-screen bg-gradient-to-tl from-zinc-900 via-zinc-400/10 to-zinc-900 ">
+        <div className="relative min-h-screen bg-gradient-to-tl from-zinc-900 via-zinc-400/10 to-zinc-900 overflow-x-hidden">
           <Particles
             className="absolute inset-0 -z-10 animate-fade-in"
-            quantity={100}
+            quantity={400}
           />{" "}
           <div className="relative pb-16">
             <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
@@ -43,7 +42,6 @@ export default async function HomePage() {
                   >
                     Disconnect Spotify
                   </Link>
-
                   <SignOut />
                 </div>
               </div>

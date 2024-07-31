@@ -69,8 +69,8 @@ function SongCard({ song, index }: { index: string; song: Song }) {
       <article className="w-full h-full p-4 md:p-8 min-w-64 flex flex-col items-center sm:items-start">
         <Image
           src="/spotify/logos/spotifywhitelogo.png"
-          width={75}
-          height={75}
+          width={60}
+          height={60}
           alt="spotify logo white"
           className="pb-2"
         />
