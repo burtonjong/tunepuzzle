@@ -1,7 +1,7 @@
 "use client";
 
 import Options from "@/components/artist/options";
-import ScoreCard from "@/components/artist/scorecard";
+import ScoreCard from "@/components/artist/scorecard/scorecard";
 import { Card } from "@/components/card";
 import Visualizer from "@/components/artist/visualizer/visualizer";
 import { useParams } from "next/navigation";
