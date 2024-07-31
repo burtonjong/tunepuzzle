@@ -1,5 +1,4 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Card } from "@/components/card";
 
 interface ArtistStatsProps {
   numArtists: number;

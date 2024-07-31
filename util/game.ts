@@ -23,8 +23,6 @@ export class Game {
     if (this.currentRound > this.totalRounds) {
       return null;
     }
-
-    this.currentRound++;
     const currentSong = this.getUnusedRandomSong();
     const wrongAnswers = this.getWrongAnswers(currentSong);
     const allOptions = this.shuffleArray([currentSong, ...wrongAnswers]);
@@ -75,8 +73,7 @@ export class Game {
     }
 
     this.userInputs[this.currentRound] = { userChoice, correctSong };
-
-    return isCorrect;
+    this.currentRound++;
   }
 
   getScore() {

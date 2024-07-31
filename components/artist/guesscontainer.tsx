@@ -23,7 +23,7 @@ export default function GuessContainer({ token }: { token: string }) {
     queryKey: ["artist", params.id],
     queryFn: async () => {
       const albumsResponse = await fetch(
-        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=album,single&market=US`,
+        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=album,single&market=US&limit=50`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,7 +107,11 @@ export default function GuessContainer({ token }: { token: string }) {
             ...prevState,
             options: [],
           }));
-          setGameState((prevState) => ({ ...prevState, currentRound: null }));
+          setGameState((prevState) => ({
+            ...prevState,
+            currentRound: null,
+            game: null,
+          }));
         }
       }
     }
@@ -120,7 +124,7 @@ export default function GuessContainer({ token }: { token: string }) {
   const handleAnswer = useCallback(
     (chosenSong: Song) => {
       if (gameState.game && gameState.currentRound) {
-        const isCorrect = gameState.game.checkAnswer(
+        gameState.game.checkAnswer(
           chosenSong,
           gameState.currentRound.currentSong
         );
@@ -139,7 +143,9 @@ export default function GuessContainer({ token }: { token: string }) {
 
   return (
     <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-32 lg:pt-72">
-      {gameState.game?.isGameOver() ? (
+      {gameState.game?.isGameOver() &&
+      gameState.currentRound?.roundNumber ===
+        gameState.game.getTotalRounds() ? (
         <div className="flex justify-center">
           <div className="absolute w-10/12 top-28">
             <ScoreCard
@@ -161,7 +167,7 @@ export default function GuessContainer({ token }: { token: string }) {
       ) : (
         <>
           <div className="absolute h-1/4 lg:h-1/2 w-screen left-0 -top-12 z-0">
-            {gameState.currentRound?.roundNumber && (
+            {gameState.currentRound?.roundNumber >= 0 && (
               <Visualizer
                 url={gameState.audio?.preview_url ?? ""}
                 volume={gameState.volume}
@@ -169,7 +175,7 @@ export default function GuessContainer({ token }: { token: string }) {
             )}
           </div>
 
-          {!gameState.currentRound?.roundNumber && (
+          {!gameState.game && (
             <div
               className="flex w-full justify-center items-end"
               style={{ marginTop: "1rem" }}
