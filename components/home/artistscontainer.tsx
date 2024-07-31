@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { CardNE } from "@/components/cardne";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ArtistStats from "@/components/home/artiststats";
@@ -12,6 +12,7 @@ import type { Artist } from "@/util/types";
 
 export default function ArtistsContainer({ token }: { token: string }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [filteredArtists, setFilteredArtists] = useState([]);
 
   const { isFetching, data } = useQuery({
@@ -48,6 +49,10 @@ export default function ArtistsContainer({ token }: { token: string }) {
 
     setFilteredArtists(filteredArtists);
   };
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["artists"] });
+  }, [router.back]);
 
   return (
     <>

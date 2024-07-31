@@ -6,6 +6,9 @@ export class Game {
   private currentRound: number;
   private score: number;
   private usedSongs: Set<string>;
+  private userInputs: {
+    [round: number]: { userChoice: Song; correctSong: Song };
+  };
 
   constructor(songs: Song[], totalRounds: number) {
     this.songs = songs;
@@ -13,6 +16,7 @@ export class Game {
     this.currentRound = 0;
     this.score = 0;
     this.usedSongs = new Set();
+    this.userInputs = {};
   }
 
   startNewRound() {
@@ -69,6 +73,9 @@ export class Game {
     if (isCorrect) {
       this.score++;
     }
+
+    this.userInputs[this.currentRound] = { userChoice, correctSong };
+
     return isCorrect;
   }
 
@@ -82,5 +89,9 @@ export class Game {
 
   isGameOver() {
     return this.currentRound >= this.totalRounds;
+  }
+
+  getUserInputs() {
+    return this.userInputs;
   }
 }

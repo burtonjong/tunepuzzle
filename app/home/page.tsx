@@ -25,8 +25,7 @@ export default async function HomePage() {
                     Hi, {session.user?.name}
                   </h2>
                   <p className="mt-4 text-zinc-400">
-                    Your followed Spotify artists will show up here. Click the
-                    artists images to play.
+                    Your followed Spotify artists will show up here.
                   </p>
                 </div>
                 <SignOut />

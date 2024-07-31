@@ -103,13 +103,11 @@ export default function GuessContainer({ token }: { token: string }) {
           const options = round.options;
           setGameState((prevState) => ({ ...prevState, audio, options }));
         } else {
-          console.log(
-            `Game Over! Your final score is ${gameState.game.getScore()} out of ${gameState.game.getTotalRounds()}`
-          );
           setGameState((prevState) => ({
             ...prevState,
             options: [],
           }));
+          setGameState((prevState) => ({ ...prevState, currentRound: null }));
         }
       }
     }
@@ -125,11 +123,6 @@ export default function GuessContainer({ token }: { token: string }) {
         const isCorrect = gameState.game.checkAnswer(
           chosenSong,
           gameState.currentRound.currentSong
-        );
-        console.log(
-          isCorrect
-            ? "Correct!"
-            : `Wrong! The correct answer was: ${gameState.currentRound.currentSong.name}`
         );
         setGameState((prevState) => ({ ...prevState, currentRound: null }));
       }
@@ -147,13 +140,13 @@ export default function GuessContainer({ token }: { token: string }) {
   return (
     <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-32 lg:pt-72">
       {gameState.game?.isGameOver() ? (
-        <div className="flex justify-center items-center">
-          <div className="absolute w-10/12 h-full top-28">
+        <div className="flex justify-center">
+          <div className="absolute w-10/12 top-28">
             <ScoreCard
               start={start}
               score={gameState.game?.getScore() ?? 0}
               totalRounds={gameState.game.getTotalRounds() ?? 0}
-              currentRound={gameState.currentRound?.roundNumber}
+              userInputs={gameState.game?.getUserInputs() ?? {}}
             />
           </div>
         </div>

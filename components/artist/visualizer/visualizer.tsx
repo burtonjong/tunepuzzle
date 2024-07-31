@@ -22,9 +22,9 @@ export default function Visualizer({
         shadow-mapSize={[2048, 2048]}
       />
       <Suspense fallback={null}>
-        <Track position-z={0} url={url} volume={volume} position-x={0} />
+        <Track position-z={-0.03} url={url} volume={volume} position-x={0.01} />
         <Track
-          position-z={0}
+          position-z={0.01}
           url={url}
           volume={volume}
           position-x={0}
