@@ -23,7 +23,7 @@ export default function GuessContainer({ token }: { token: string }) {
     queryKey: ["artist", params.id],
     queryFn: async () => {
       const albumsResponse = await fetch(
-        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=single,album&market=US`,
+        `https://api.spotify.com/v1/artists/${params.id}/albums?include_groups=album,single&market=US`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -146,7 +146,18 @@ export default function GuessContainer({ token }: { token: string }) {
 
   return (
     <div className="px-6 pt-20 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-32 lg:pt-72">
-      {isFetching ? (
+      {gameState.game?.isGameOver() ? (
+        <div className="flex justify-center items-center">
+          <div className="absolute w-10/12 h-full top-28">
+            <ScoreCard
+              start={start}
+              score={gameState.game?.getScore() ?? 0}
+              totalRounds={gameState.game.getTotalRounds() ?? 0}
+              currentRound={gameState.currentRound?.roundNumber}
+            />
+          </div>
+        </div>
+      ) : isFetching ? (
         <div className="flex flex-row justify-between w-full">
           <div className="max-w-2xl mx-auto lg:mx-0 ">
             <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
@@ -188,33 +199,27 @@ export default function GuessContainer({ token }: { token: string }) {
           <div className=" flex justify-center w-full flex-col items-center gap-4">
             <div className="w-full h-px bg-zinc-800" />
 
-            {gameState.game ? (
-              gameState.options && gameState.options.length > 0 ? (
-                <>
-                  <input
-                    className="z-10"
-                    type="range"
-                    name="volume"
-                    value={gameState.volume}
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    onChange={handleSlider}
-                  />
-                  <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-                    <Options
-                      songs={gameState.options ?? []}
-                      handleAnswer={handleAnswer}
-                    />
-                  </div>
-                </>
-              ) : (
-                <ScoreCard
-                  score={gameState.game?.getScore() ?? 0}
-                  totalRounds={gameState.game.getTotalRounds() ?? 0}
-                  currentRound={gameState.currentRound?.roundNumber}
+            {gameState.game &&
+            gameState.options &&
+            gameState.options.length > 0 ? (
+              <>
+                <input
+                  className="z-10 my-4"
+                  type="range"
+                  name="volume"
+                  value={gameState.volume}
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  onChange={handleSlider}
                 />
-              )
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                  <Options
+                    songs={gameState.options ?? []}
+                    handleAnswer={handleAnswer}
+                  />
+                </div>
+              </>
             ) : (
               <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
                 Options will appear here.

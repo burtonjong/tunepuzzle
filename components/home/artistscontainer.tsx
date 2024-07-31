@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { CardNE } from "@/components/cardne";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import type { Artist } from "@/util/types";
 
 export default function ArtistsContainer({ token }: { token: string }) {
   const router = useRouter();
+  const [filteredArtists, setFilteredArtists] = useState([]);
 
   const { isFetching, data } = useQuery({
     initialData: {} as Artist[],
@@ -31,6 +32,7 @@ export default function ArtistsContainer({ token }: { token: string }) {
 
       const data = await response.json();
       console.log(data);
+      setFilteredArtists(data.artists.items);
       return data;
     },
   });
@@ -39,9 +41,20 @@ export default function ArtistsContainer({ token }: { token: string }) {
     router.push(`/artist/${id}`);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const filteredArtists = data.artists.items.filter((artist: Artist) => {
+      return artist.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+
+    setFilteredArtists(filteredArtists);
+  };
+
   return (
     <>
-      <ArtistStats numArtists={data?.artists?.items.length} />{" "}
+      <ArtistStats
+        numArtists={data?.artists?.items.length}
+        handleSearchChange={handleSearchChange}
+      />{" "}
       {isFetching ? (
         <div className="gap-8 mx-auto">
           <div className="w-full h-full">
@@ -62,7 +75,7 @@ export default function ArtistsContainer({ token }: { token: string }) {
             className="animate-fade-up w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 "
             style={{ marginTop: "1rem" }}
           >
-            {data.artists.items.map((artist: Artist) => (
+            {filteredArtists?.map((artist: Artist) => (
               <CardNE key={artist.id}>
                 <div
                   onClick={() => handleArtistClick(artist.id)}
@@ -97,7 +110,8 @@ export default function ArtistsContainer({ token }: { token: string }) {
                           target="_blank"
                           href={artist.external_urls.spotify}
                           rel="noopener noreferrer"
-                          className="underline"
+                          className="underline z-10"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           Go to spotify profile
                         </a>

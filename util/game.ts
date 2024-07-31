@@ -16,7 +16,7 @@ export class Game {
   }
 
   startNewRound() {
-    if (this.currentRound >= this.totalRounds) {
+    if (this.currentRound > this.totalRounds) {
       return null;
     }
 
