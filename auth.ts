@@ -92,6 +92,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return !!auth;
     },
   },
+  pages: {
+    signIn: "/",
+    signOut: "/",
+  },
 });
 
 declare module "next-auth" {

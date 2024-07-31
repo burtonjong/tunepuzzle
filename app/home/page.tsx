@@ -1,10 +1,12 @@
 import React from "react";
 import { auth } from "@/auth";
 
-import SignOut from "@/components/home/SignOut";
+import SignOut from "@/components/home/signout";
+import HomeButton from "@/components/home/homebutton";
 import Particles from "@/components/particles";
 
 import ArtistsContainer from "@/components/home/artistscontainer";
+import Link from "next/link";
 
 export default async function HomePage() {
   const session = await auth();
@@ -28,7 +30,22 @@ export default async function HomePage() {
                     Your followed Spotify artists will show up here.
                   </p>
                 </div>
-                <SignOut />
+                <div className="flex gap-8">
+                  <Link
+                    href="/"
+                    className="duration-200 text-zinc-300 hover:text-zinc-100 flex items-center"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    href="/"
+                    className="duration-200 text-zinc-300 hover:text-zinc-100 flex items-center"
+                  >
+                    Disconnect Spotify
+                  </Link>
+
+                  <SignOut />
+                </div>
               </div>
               <div
                 className="w-full h-px bg-zinc-800"
