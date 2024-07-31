@@ -11,7 +11,6 @@ export default function Visualizer({
   url: string;
   volume: number;
 }) {
-  console.log(url);
   return (
     <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0.45, 1.3], fov: 25 }}>
       <spotLight

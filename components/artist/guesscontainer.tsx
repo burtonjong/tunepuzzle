@@ -79,6 +79,7 @@ export default function GuessContainer({ token }: { token: string }) {
   });
 
   const [gameState, setGameState] = useState({
+    totalRounds: 7,
     game: null as Game | null,
     currentRound: null as any,
     audio: undefined as Song | undefined,
@@ -88,8 +89,12 @@ export default function GuessContainer({ token }: { token: string }) {
 
   const start = () => {
     if (isSuccess) {
-      const game = new Game(songs, 5);
-      setGameState((prevState) => ({ ...prevState, game, totalRounds: 5 }));
+      const game = new Game(songs, gameState.totalRounds);
+      setGameState((prevState) => ({
+        ...prevState,
+        game,
+        totalRounds: gameState.totalRounds,
+      }));
     }
   };
 
@@ -135,10 +140,18 @@ export default function GuessContainer({ token }: { token: string }) {
   );
 
   const handleSlider = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGameState((prevState) => ({
-      ...prevState,
-      volume: Number(event.target.value),
-    }));
+    if (event.target.name === "volume") {
+      setGameState((prevState) => ({
+        ...prevState,
+        volume: Number(event.target.value),
+      }));
+    } else if (event.target.name === "total-rounds") {
+      console.log(event.target.value);
+      setGameState((prevState) => ({
+        ...prevState,
+        totalRounds: Number(event.target.value),
+      }));
+    }
   };
 
   return (
@@ -176,20 +189,32 @@ export default function GuessContainer({ token }: { token: string }) {
           </div>
 
           {!gameState.game && (
-            <div
-              className="flex w-full justify-center items-end"
-              style={{ marginTop: "1rem" }}
-            >
+            <div className="flex w-full justify-center items-end">
               <div className="w-1/8 h-full">
                 <button
                   onClick={() => start()}
                   className="text-zinc-100 hover:text-white"
                 >
                   <Card>
-                    <article className="relative w-full h-full p-4 md:p-8">
+                    <article className="relative w-full h-full p-4 md:p-8 ">
                       Start Game
                     </article>
                   </Card>
+                  <div className="mt-6">
+                    <input
+                      className="z-10 mt-4"
+                      type="range"
+                      name="total-rounds"
+                      value={gameState.totalRounds}
+                      min="2"
+                      max="12"
+                      step="1"
+                      onChange={handleSlider}
+                    />
+                    <p className="mt-4 leading-8 duration-150 text-zinc-400 group-hover:text-zinc-300">
+                      Total Rounds: {gameState.totalRounds}
+                    </p>
+                  </div>
                 </button>
               </div>
             </div>
@@ -212,6 +237,7 @@ export default function GuessContainer({ token }: { token: string }) {
                   step="0.01"
                   onChange={handleSlider}
                 />
+
                 <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
                   <Options
                     songs={gameState.options ?? []}
@@ -220,7 +246,7 @@ export default function GuessContainer({ token }: { token: string }) {
                 </div>
               </>
             ) : (
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+              <h2 className="text-3xl mt-10 font-bold tracking-tight text-zinc-100 sm:text-4xl">
                 Options will appear here.
               </h2>
             )}
